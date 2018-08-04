@@ -8,10 +8,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from ..enum.dml import MSO_COLOR_TYPE, MSO_THEME_COLOR
 from ..oxml.dml.color import (
-    CT_HslColor, CT_PresetColor, CT_SchemeColor, CT_ScRgbColor, CT_SRgbColor,
+        CT_HslColor, CT_PresetColor, CT_SchemeColor, CT_ScRgbColor, CT_SRgbColor,
     CT_SystemColor
 )
-
+from ..dml.names_of_colors import NAMES_OF_COLOR as _NAMES_OF_COLOR
 
 class ColorFormat(object):
     """
@@ -207,10 +207,17 @@ class _NoneColor(_Color):
 
 
 class _PrstColor(_Color):
+    _names_of_color = _NAMES_OF_COLOR
 
     @property
     def color_type(self):
         return MSO_COLOR_TYPE.PRESET
+
+    @property
+    def rgb(self):
+        color_name = self._xClr.attrib['val']
+        rgb = RGBColor.from_string(self._names_of_color[color_name])
+        return rgb
 
 
 class _SchemeColor(_Color):
